@@ -1,46 +1,47 @@
-//实现访问xiaomi.xxxx.xxxxx，重定向至小米最新网站。
-//最新网站托管github，json格式，内部文件格式"xiaomi": "http://milvdou.fun",   ”xiaomi“与域名前面部分一致，自定义
-//github action 自动更新redirects.json  自己ai下
-//cfwork添加自定义路由对应域名*.xxxx.xxxxx/*    cf对应域名加dns  cname  *   xxxx.xxxx  开小黄云
+/**
+ * Welcome to Cloudflare Workers! This is your first worker.
+ *
+ * - Run "npm run dev" in your terminal to start a development server
+ * - Open a browser tab at http://localhost:8787/ to see your worker in action
+ * - Run "npm run deploy" to publish your worker
+ *
+ * Learn more at https://developers.cloudflare.com/workers/
+ */
 
-const CONFIG_URL = "https://raw.githubusercontent.com/TaoXG/vod/refs/heads/main/redirects.json";   //托管github文件地址
-const DOMAIN = "taoxg.top";    //自己托管cf的域名
+const store = {
+};
+const configUrl =
+  "https://raw.githubusercontent.com/TaoXG/catvod/refs/heads/main/redirects.json";
 
 export default {
-  async fetch(request) {
-    const url = new URL(request.url);
-    const hostname = url.hostname;
-
-    // 阻止常见攻击
-    if (url.searchParams.has("../") || url.pathname.includes("..")) {
-      return new Response("检测到非法访问尝试", { status: 403 });
-    }
-
-    // 解析子域名，
-    const subdomain = hostname.replace(`.${DOMAIN}`, "");
-
+  async fetch(request, env, ctx) {
     try {
-      // 获取 GitHub 上的 JSON 配置
-      const response = await fetch(CONFIG_URL);
-      if (!response.ok) {
-        return new Response("加载配置失败", { status: 500 });
+      const res = await fetch(configUrl);
+      if (!res.ok) {
+        throw new Error("获取地址配置失败");
       }
-
-      const redirects = await response.json();
-
-      // 检查子域名是否有对应的重定向目标
-      if (redirects[subdomain]) {
-        // 保留原始路径
-        const targetUrl = new URL(redirects[subdomain]);
-        targetUrl.pathname = url.pathname;
-        targetUrl.search = url.search;
-
-        return Response.redirect(targetUrl.toString(), 301);
-      }
-
-      return new Response("未找到对应的子域名", { status: 404 });
-    } catch (error) {
-      return new Response("获取重定向信息时出错", { status: 500 });
+      const ret = await res.json();
+      Object.assign(store, ret);
+    } catch (e) {
+      return new Response(e.message, { status: 400 });
     }
-  }
+
+    const url = new URL(request.url);
+    const { pathname, search } = url;
+
+    const temps = pathname.split("/").filter(Boolean);
+    if (temps.length < 1) {
+      //路径不包含site
+      return new Response("Not Found", { status: 404 });
+    }
+    //如果不是中文可以不需要解码
+    const siteKey = decodeURIComponent(temps.shift());
+
+    const baseUrl = store[siteKey];
+    if (!baseUrl) {
+      //找不到站点
+      return new Response(`Not Found [${siteKey}]`, { status: 404 });
+    }
+    return Response.redirect(`${baseUrl}/${temps.join("/")}${search}`, 301);
+  },
 };
