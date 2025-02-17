@@ -4,7 +4,8 @@ import requests
 import time
 
 # API 地址
-api_path = 'https://tvbox.catvod.com/xs/api.json'
+# api_path = 'https://tvbox.catvod.com/xs/api.json'
+api_path = 'https://raw.githubusercontent.com/celin1286/xiaosa/refs/heads/main/TVBoxOSC/tvbox/api.json'
 redirects_path = 'redirects.json'  # 最终输出的 JSON 文件
 log_path = 'log.txt'  # 记录完整 API 信息
 
