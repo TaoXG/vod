@@ -1,7 +1,7 @@
 {
   "spider": "./spider.jar",
-  "wallpaper": "https://imgs.catvod.com",
-  "logo": "https://imgs.catvod.com",
+  "wallpaper": "http://bobohome.ignorelist.com:20247/bing",
+  "logo": "http://127.0.0.1:9978/file/TVBox/logo.png",
   "sites": [
     {
       "key": "豆瓣",
@@ -2160,16 +2160,13 @@
   ],
   "lives": [
     {
-      "name": "catvod.com",
-      "url": "https://iptv.catvod.com/tv.m3u"
-    },
-    {
-      "name": "catvod.com(备用)",
-      "url": "https://live.catvod.com/tv.m3u"
-    },
-    {
-      "name": "catvod.com(hosts)",
-      "url": "https://tvbox.catvod.com/tv.m3u"
+      "name": "ITV",
+      "type": 0,
+      "url": "./ITV.txt",
+      "epg": "http://epg.51zmt.top:8000/e.xml",
+      "ua": "okhttp/3.15,AptvPlayer/1.4.0",
+      "timeout": "3",
+      "playerType": 2
     },
     {
       "name": "肥羊直播",
@@ -2182,6 +2179,22 @@
         "type": "append",
         "source": "?livemode=4&starttime=${(b)yyyyMMdd'T'HHmm}00.00Z&endtime=${(e)yyyyMMdd'T'HHmm}00.00Z"
       }
+    },
+    {
+      "name": "AI直播",
+      "type": 0,
+      "url": "https://ghproxy.net/raw.githubusercontent.com/PizazzGY/TV/master/output/user_result.txt",
+      "epg": "http://cdn.1678520.xyz/epg/?ch={name}&date={date}",
+      "playerType": 2,
+      "timeout": 10
+    },
+    {
+      "name": "AI直播+",
+      "type": 0,
+      "url": "https://wget.la/https://raw.githubusercontent.com/PizazzGY/TV/master/output/user_result.txt",
+      "epg": "http://cdn.1678520.xyz/epg/?ch={name}&date={date}",
+      "playerType": 2,
+      "timeout": 10
     },
     {
       "name": "虎牙一起看",
