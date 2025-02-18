@@ -11,7 +11,7 @@
 const store = {
 };
 const configUrl =
-  "https://raw.githubusercontent.com/TaoXG/catvod/refs/heads/main/redirects.json";
+  "https://raw.githubusercontent.com/TaoXG/xiaosa/refs/heads/main/url.json";
 
 export default {
   async fetch(request, env, ctx) {
